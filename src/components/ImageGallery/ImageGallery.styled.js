@@ -12,3 +12,8 @@ export const ImageGalleryList = styled.ul`
   margin-left: auto;
   margin-right: auto;
 `;
+
+export const ErrorMessage = styled.h2`
+  grid-template-columns: 1fr;
+  text-align: center;
+`;

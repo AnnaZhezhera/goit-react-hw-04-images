@@ -5,6 +5,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import * as API from './services/api';
 import { AppWrapp } from './App.styled';
 import ButtonLoadMore from './ButtonLoadMore/ButtonLoadMore';
+import Loader from './Loader/Loader';
 
 // axios.defaults.baseURL = 'https://pixabay.com/api/';
 // const REACT_APP_API_KEY = '29521518-5bff3e3ab528698c58648398d';
@@ -22,28 +23,47 @@ export class App extends Component {
     page: 1,
     searchQuery: '',
     isLoading: false,
+    error: false,
   };
 
   appOnSubmit = async searchQuery => {
     console.log('App on subnit:', searchQuery);
-    const images = await API.getImages(searchQuery, this.state.page);
-    console.log('images', images.hits);
-    this.setState(state => ({
-      searchImages: images.hits,
-      searchQuery: searchQuery,
-    }));
+
+    this.setState({ isLoading: true });
+    try {
+      const images = await API.getImages(searchQuery, this.state.page);
+
+      // console.log('images', images.hits);
+      if (images.hits.length === 0) {
+        this.setState({ error: true });
+      } else {
+        this.setState({ error: false });
+      }
+
+      this.setState(state => ({
+        searchImages: images.hits,
+        searchQuery: searchQuery,
+      }));
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
   loadMore = async () => {
-    const images = await API.getImages(
-      this.state.searchQuery,
-      this.state.page + 1
-    );
+    this.setState({ isLoading: true });
+    try {
+      const images = await API.getImages(
+        this.state.searchQuery,
+        this.state.page + 1
+      );
 
-    this.setState(prevState => ({
-      searchImages: [...prevState.searchImages, ...images.hits],
-      page: prevState.page + 1,
-    }));
+      this.setState(prevState => ({
+        searchImages: [...prevState.searchImages, ...images.hits],
+        page: prevState.page + 1,
+      }));
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
   componentDidUpdate(_, prevState) {
@@ -58,9 +78,23 @@ export class App extends Component {
   render() {
     return (
       <AppWrapp>
-        <Searchbar onSubmit={this.appOnSubmit} />
-        <ImageGallery searchImages={this.state.searchImages} />
-        <ButtonLoadMore onClick={this.loadMore} page={this.state.page} />
+        <Searchbar
+          onSubmitt={this.appOnSubmit}
+          searchQuery={this.state.searchQuery}
+        />
+
+        <ImageGallery
+          searchImages={this.state.searchImages}
+          error={this.state.error}
+        />
+
+        <ButtonLoadMore
+          onClick={this.loadMore}
+          page={this.state.page}
+          searchImages={this.state.searchImages}
+          isLoading={this.state.isLoading}
+        />
+        <Loader isLoading={this.state.isLoading} />
       </AppWrapp>
     );
   }

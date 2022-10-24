@@ -7,12 +7,26 @@ import {
 } from './Searchbar.styled';
 
 export default class Searchbar extends Component {
+  state = {
+    searchQuery: '',
+  };
+
+  handleChangeName = event => {
+    console.log(event.currentTarget.value);
+    this.setState({
+      searchQuery: event.currentTarget.value.toLowerCase(),
+    });
+  };
+
   onSearchSubmit = event => {
     event.preventDefault();
-    const form = event.currentTarget;
-    const searchInput = form.elements.searchInput.value;
-    console.log(searchInput);
-    this.props.onSubmit(searchInput);
+
+    console.log('this.state.searchQuery', this.state.searchQuery);
+    if (this.state.searchQuery.trim() === '') {
+      return alert('Введіть пошукове слово');
+    }
+
+    this.props.onSubmitt(this.state.searchQuery);
   };
 
   render() {
@@ -29,6 +43,8 @@ export default class Searchbar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
+            value={this.state.searchQuery}
+            onChange={this.handleChangeName}
           />
         </SearchForm>
       </SearchbarBlock>

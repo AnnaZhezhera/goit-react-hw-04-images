@@ -1,10 +1,10 @@
 import React from 'react';
-import { ImageGalleryList } from './ImageGalleryItem.styled';
+import { ImageGalleryCard } from './ImageGalleryItem.styled';
 
 export const ImageGalleryItem = ({ id, webformatURL, tags }) => {
   return (
-    <ImageGalleryList className="gallery-item" key={id}>
+    <ImageGalleryCard className="gallery-item" key={id}>
       <img src={webformatURL} alt={tags} />
-    </ImageGalleryList>
+    </ImageGalleryCard>
   );
 };
