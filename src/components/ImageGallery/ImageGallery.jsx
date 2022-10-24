@@ -2,7 +2,8 @@ import React from 'react';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
 
-const ImageGallery = ({ searchImages }) => {
+const ImageGallery = ({ searchImages, page }) => {
+  console.log('searchImages', searchImages);
   return (
     <ImageGalleryList className="gallery">
       {searchImages.map(image => (
