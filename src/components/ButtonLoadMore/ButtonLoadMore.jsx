@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { BtnLoadMore } from './ButtonLoadMore.styled';
 
 const ButtonLoadMore = ({ onClick, searchImages, isLoading }) => {
@@ -12,3 +13,9 @@ const ButtonLoadMore = ({ onClick, searchImages, isLoading }) => {
 };
 
 export default ButtonLoadMore;
+
+ButtonLoadMore.prototype = {
+  searchImages: PropTypes.arrayOf(PropTypes.shape({})),
+  onClick: PropTypes.func,
+  isLoading: PropTypes.bool,
+};

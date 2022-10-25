@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Bars } from 'react-loader-spinner';
 
 const Loader = ({ isLoading }) => {
@@ -20,3 +21,7 @@ const Loader = ({ isLoading }) => {
 };
 
 export default Loader;
+
+Loader.prototype = {
+  isLoading: PropTypes.bool,
+};

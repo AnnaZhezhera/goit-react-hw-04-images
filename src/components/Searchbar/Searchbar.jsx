@@ -5,6 +5,7 @@ import {
   SearchFormButton,
   SearchFormInput,
 } from './Searchbar.styled';
+import { FaSearch } from 'react-icons/fa';
 
 export default class Searchbar extends Component {
   state = {
@@ -34,7 +35,9 @@ export default class Searchbar extends Component {
       <SearchbarBlock>
         <SearchForm onSubmit={this.onSearchSubmit}>
           <SearchFormButton type="submit" className="button">
-            <span>Search</span>
+            <span className="search-icon">
+              <FaSearch style={{ width: '100%', height: '100%' }} />
+            </span>
           </SearchFormButton>
 
           <SearchFormInput
