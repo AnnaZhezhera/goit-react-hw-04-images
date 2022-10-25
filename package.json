@@ -2,7 +2,7 @@
   "name": "goit-react-hw-03-image-finder",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://goitacademy.github.io/goit-react-hw-03-image-finder/",
+  "homepage": "https://annazhezhera.github.io/goit-react-hw-03-image-finder/",
   "dependencies": {
     "@csstools/normalize.css": "^12.0.0",
     "@testing-library/jest-dom": "^5.16.3",
