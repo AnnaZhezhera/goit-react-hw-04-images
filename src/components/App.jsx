@@ -22,7 +22,6 @@ export class App extends Component {
     try {
       const images = await API.getImages(searchQuery, this.state.page);
 
-      // console.log('images', images.hits);
       if (images.hits.length === 0) {
         this.setState({ error: true });
       } else {
@@ -54,15 +53,6 @@ export class App extends Component {
       this.setState({ isLoading: false });
     }
   };
-
-  componentDidUpdate(_, prevState) {
-    if (
-      prevState.page !== this.state.page ||
-      prevState.searchImages !== this.state.searchImages
-    ) {
-      console.log('fetch');
-    }
-  }
 
   render() {
     return (

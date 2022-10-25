@@ -13,7 +13,6 @@ export default class Searchbar extends Component {
   };
 
   handleChangeName = event => {
-    console.log(event.currentTarget.value);
     this.setState({
       searchQuery: event.currentTarget.value.toLowerCase(),
     });

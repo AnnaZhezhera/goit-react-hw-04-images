@@ -11,28 +11,27 @@ export default class ImageGallery extends Component {
   };
   state = {
     showModal: false,
-    largeImageURL: '',
+    selectedImage: {},
   };
 
-  toggleModal = (showModal, largeImageURL) => {
+  toggleModal = (showModal, selectedImage) => {
     this.setState(state => ({
       showModal: showModal,
-      largeImageURL: largeImageURL,
+      selectedImage: selectedImage,
     }));
   };
 
-  // console.log('searchImages', searchImages);
-
-  // if (!error) {
   render() {
     const { searchImages, error } = this.props;
-    // console.log('searchImages', searchImages[0].largeImageURL);
 
     return (
       <ImageGalleryList className="gallery">
         {this.state.showModal && (
           <Modal onClose={() => this.toggleModal(false, '')}>
-            <img src={this.state.largeImageURL} alt="selected-card" />
+            <img
+              src={this.state.selectedImage.largeImageURL}
+              alt={this.state.selectedImage.tags}
+            />
           </Modal>
         )}
         {error === true ? (
@@ -42,7 +41,7 @@ export default class ImageGallery extends Component {
             <ImageGalleryItem
               key={image.id}
               {...image}
-              onClick={() => this.toggleModal(true, image.largeImageURL)}
+              onClick={() => this.toggleModal(true, image)}
             />
           ))
         )}
