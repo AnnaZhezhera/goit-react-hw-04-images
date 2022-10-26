@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import {
   SearchbarBlock,
   SearchForm,
@@ -8,6 +9,10 @@ import {
 import { FaSearch } from 'react-icons/fa';
 
 export default class Searchbar extends Component {
+  static = {
+    onSubmitt: PropTypes.func,
+  };
+
   state = {
     searchQuery: '',
   };
@@ -21,7 +26,6 @@ export default class Searchbar extends Component {
   onSearchSubmit = event => {
     event.preventDefault();
 
-    console.log('this.state.searchQuery', this.state.searchQuery);
     if (this.state.searchQuery.trim() === '') {
       return alert('Введіть пошукове слово');
     }

@@ -16,8 +16,6 @@ export class App extends Component {
   };
 
   appOnSubmit = async searchQuery => {
-    console.log('App on subnit:', searchQuery);
-
     this.setState({ isLoading: true });
     try {
       const images = await API.getImages(searchQuery, this.state.page);

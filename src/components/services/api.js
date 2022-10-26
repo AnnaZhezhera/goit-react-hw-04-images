@@ -11,6 +11,6 @@ export const getImages = async (search, page) => {
   const response = await axios.get(
     '?q=' + encodeURIComponent(search || '') + '&page=' + page
   );
-  console.log('api.js', response.data);
+
   return response.data;
 };

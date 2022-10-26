@@ -13,6 +13,6 @@ export const ImageGalleryItem = ({ id, webformatURL, tags, onClick }) => {
 ImageGalleryItem.prototype = {
   id: PropTypes.number,
   webformatURL: PropTypes.string,
-  tags: PropTypes.array,
+  tags: PropTypes.string,
   onClick: PropTypes.func,
 };
