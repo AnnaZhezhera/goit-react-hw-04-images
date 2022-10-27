@@ -21,6 +21,6 @@ export const ModalContent = styled.div`
   min-height: 300px;
   max-width: 600px;
   width: 100%; */
-  max-width: calc(100vw - 48px);
-  max-height: calc(100vh - 24px);
+  max-width: calc(100vw - 96x);
+  max-height: calc(100vh - 48px);
 `;

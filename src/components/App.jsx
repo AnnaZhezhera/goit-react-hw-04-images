@@ -13,11 +13,12 @@ export class App extends Component {
     searchQuery: '',
     isLoading: false,
     error: false,
+    totalHits: 0,
   };
 
   appOnSubmit = async searchQuery => {
-    this.setState({ isLoading: true });
     try {
+      this.setState({ isLoading: true });
       const images = await API.getImages(searchQuery, this.state.page);
 
       if (images.hits.length === 0) {
@@ -26,18 +27,20 @@ export class App extends Component {
         this.setState({ error: false });
       }
 
-      this.setState(state => ({
-        searchImages: images.hits,
-        searchQuery: searchQuery,
-      }));
+      if (images.total)
+        this.setState(state => ({
+          searchImages: images.hits,
+          searchQuery: searchQuery,
+          totalHits: images.total,
+        }));
     } finally {
       this.setState({ isLoading: false });
     }
   };
 
   loadMore = async () => {
-    this.setState({ isLoading: true });
     try {
+      this.setState({ isLoading: true });
       const images = await API.getImages(
         this.state.searchQuery,
         this.state.page + 1
@@ -50,6 +53,14 @@ export class App extends Component {
     } finally {
       this.setState({ isLoading: false });
     }
+  };
+
+  isLoadMoreShown = () => {
+    return (
+      this.state.searchImages.length > 0 &&
+      this.state.searchImages.length !== this.state.totalHits &&
+      !this.state.isLoading
+    );
   };
 
   render() {
@@ -68,8 +79,7 @@ export class App extends Component {
         <ButtonLoadMore
           onClick={this.loadMore}
           page={this.state.page}
-          searchImages={this.state.searchImages}
-          isLoading={this.state.isLoading}
+          isShown={this.isLoadMoreShown()}
         />
         <Loader isLoading={this.state.isLoading} />
       </AppWrapp>
