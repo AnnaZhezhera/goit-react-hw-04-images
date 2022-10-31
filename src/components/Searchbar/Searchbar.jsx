@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   SearchbarBlock,
@@ -8,52 +8,46 @@ import {
 } from './Searchbar.styled';
 import { FaSearch } from 'react-icons/fa';
 
-export default class Searchbar extends Component {
-  static = {
-    onSubmitt: PropTypes.func,
+export default function Searchbar({ onSubmitt }) {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleChangeName = event => {
+    setSearchQuery(event.currentTarget.value.toLowerCase());
   };
 
-  state = {
-    searchQuery: '',
-  };
-
-  handleChangeName = event => {
-    this.setState({
-      searchQuery: event.currentTarget.value.toLowerCase(),
-    });
-  };
-
-  onSearchSubmit = event => {
+  const onSearchSubmit = event => {
     event.preventDefault();
 
-    if (this.state.searchQuery.trim() === '') {
+    if (searchQuery.trim() === '') {
       return alert('Введіть пошукове слово');
     }
 
-    this.props.onSubmitt(this.state.searchQuery);
+    onSubmitt(searchQuery);
   };
 
-  render() {
-    return (
-      <SearchbarBlock>
-        <SearchForm onSubmit={this.onSearchSubmit}>
-          <SearchFormButton type="submit" className="button">
-            <span className="search-icon">
-              <FaSearch style={{ width: '100%', height: '100%' }} />
-            </span>
-          </SearchFormButton>
+  return (
+    <SearchbarBlock>
+      <SearchForm onSubmit={onSearchSubmit}>
+        <SearchFormButton type="submit" className="button">
+          <span className="search-icon">
+            <FaSearch style={{ width: '100%', height: '100%' }} />
+          </span>
+        </SearchFormButton>
 
-          <SearchFormInput
-            type="text"
-            name="searchInput"
-            autoComplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            value={this.state.searchQuery}
-            onChange={this.handleChangeName}
-          />
-        </SearchForm>
-      </SearchbarBlock>
-    );
-  }
+        <SearchFormInput
+          type="text"
+          name="searchInput"
+          autoComplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          value={searchQuery}
+          onChange={handleChangeName}
+        />
+      </SearchForm>
+    </SearchbarBlock>
+  );
 }
+
+Searchbar.propTypes = {
+  onSubmitt: PropTypes.func,
+};
