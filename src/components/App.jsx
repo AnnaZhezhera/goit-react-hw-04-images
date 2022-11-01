@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import * as API from './services/api';
@@ -6,83 +6,72 @@ import { AppWrapp } from './App.styled';
 import ButtonLoadMore from './ButtonLoadMore/ButtonLoadMore';
 import Loader from './Loader/Loader';
 
-export class App extends Component {
-  state = {
-    searchImages: [],
-    page: 1,
-    searchQuery: '',
-    isLoading: false,
-    error: false,
-    totalHits: 0,
-  };
+export function App() {
+  const [searchImages, setSearchImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
+  const [totalHits, setTotalHits] = useState(0);
 
-  appOnSubmit = async searchQuery => {
+  async function appOnSubmit(searchQuery) {
+    setPage(1);
+
     try {
-      this.setState({ isLoading: true });
-      const images = await API.getImages(searchQuery, this.state.page);
+      setIsLoading(true);
+      const images = await API.getImages(searchQuery, 1);
 
       if (images.hits.length === 0) {
-        this.setState({ error: true });
+        setError(true);
       } else {
-        this.setState({ error: false });
+        setError(false);
       }
 
-      if (images.total)
-        this.setState(state => ({
-          searchImages: images.hits,
-          searchQuery: searchQuery,
-          totalHits: images.total,
-        }));
+      if (images.total) {
+        setSearchImages(images.hits);
+        setSearchQuery(searchQuery);
+        setTotalHits(images.total);
+      }
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
-  };
-
-  loadMore = async () => {
-    try {
-      this.setState({ isLoading: true });
-      const images = await API.getImages(
-        this.state.searchQuery,
-        this.state.page + 1
-      );
-
-      this.setState(prevState => ({
-        searchImages: [...prevState.searchImages, ...images.hits],
-        page: prevState.page + 1,
-      }));
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  };
-
-  isLoadMoreShown = () => {
-    return (
-      this.state.searchImages.length > 0 &&
-      this.state.searchImages.length !== this.state.totalHits &&
-      !this.state.isLoading
-    );
-  };
-
-  render() {
-    return (
-      <AppWrapp>
-        <Searchbar
-          onSubmitt={this.appOnSubmit}
-          searchQuery={this.state.searchQuery}
-        />
-
-        <ImageGallery
-          searchImages={this.state.searchImages}
-          error={this.state.error}
-        />
-
-        <ButtonLoadMore
-          onClick={this.loadMore}
-          page={this.state.page}
-          isShown={this.isLoadMoreShown()}
-        />
-        <Loader isLoading={this.state.isLoading} />
-      </AppWrapp>
-    );
   }
+
+  function loadMore() {
+    setPage(state => state + 1);
+  }
+
+  //викликається при натисканні на завантажити ще кнопку
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const images = await API.getImages(searchQuery, page);
+        setSearchImages(state => [...state, ...images.hits]);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (page > 1) {
+      fetchData();
+    }
+  }, [page, searchQuery]);
+
+  const isLoadMoreShown = () => {
+    return (
+      searchImages.length > 0 && searchImages.length !== totalHits && !isLoading
+    );
+  };
+
+  return (
+    <AppWrapp>
+      <Searchbar onSubmitt={appOnSubmit} searchQuery={searchQuery} />
+
+      <ImageGallery searchImages={searchImages} error={error} />
+
+      <ButtonLoadMore onClick={loadMore} isShown={isLoadMoreShown()} />
+      <Loader isLoading={isLoading} />
+    </AppWrapp>
+  );
 }
